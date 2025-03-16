@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="C:\Users\Julia\Desktop\Program.cs" Link="Program.cs" />
+    <Compile Include="D:\repos\github\Console-Bot\Console Bot\Program.cs" Link="Program.cs" />
   </ItemGroup>
 
 </Project>
