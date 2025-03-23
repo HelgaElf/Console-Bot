@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 namespace Console_Bot
 {
     internal class Program
@@ -13,39 +14,45 @@ namespace Console_Bot
         public static List<string> Tasks = new List<string>();
         public static int taskCountLimit;
         public static int taskLengthLimit;
+        public static int min = 0;
+        public static int max = 100;
         static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 Program program = new Program();
                 Console.WriteLine("Добро пожаловать! Выберите команду: /start (для начала работы), /help (если требуется помощь), /info (о боте), /exit (для выхода)");
                 while (true)
                 {
-                    try
-                    {
-                        program.Input();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.GetType);
-                        Console.WriteLine("Ошибка: " + ex.Message);
-                        Console.WriteLine(ex.StackTrace);
-                        Console.WriteLine(ex.InnerException);
-                    }
-                }           
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка: {ex.Message}");
-            }
+                try
+                {
+                    program.Input();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.GetType);
+                    Console.WriteLine("Ошибка: " + ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    Console.WriteLine(ex.InnerException);
+                    Console.WriteLine("Выберите команду: /start (для начала работы), /help (если требуется помощь), /info (о боте), /exit (для выхода)");
+                }
+            }           
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.GetType);
+            //    Console.WriteLine("Ошибка: " + ex.Message);
+            //    Console.WriteLine(ex.StackTrace);
+            //    Console.WriteLine(ex.InnerException);
+            //}
         }
 
      
 
         bool Input()
         {
-            try
-            {
+            //try
+            //{
                 string input = Console.ReadLine();
 
                 switch (input)
@@ -90,13 +97,13 @@ namespace Console_Bot
                         throw new ArgumentException("Введите одну из предложенных команд!");
 
                 }
-            }
+            //}
 
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return true;
-            }
+            //catch (ArgumentException ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //    return true;
+            //}
 
             return true;
         }
@@ -106,66 +113,38 @@ namespace Console_Bot
             {
                 Console.WriteLine("Введите ваше имя: ");
                 userName = Console.ReadLine();
-                if (userName != string.Empty)
-                {
+                ValidateString(userName);
+                
                     Console.WriteLine("Hello, " + userName + "!");
                     Console.WriteLine("Введите максимально допустимое количество задач: ");
                     while (true)
                     {
-                        try
+                        var input = Console.ReadLine();
+                        taskCountLimit = ParseAndValidateInt(input, min, max);
+                        if(taskCountLimit > 0)
                         {
-                            var input = Console.ReadLine();
-
-                            if (Int32.TryParse(input, out taskCountLimit) && taskCountLimit < 100 && taskCountLimit >= 1)
-                            {
-
-                                Console.WriteLine("Максимальное число задач в списке - " + taskCountLimit);
-                                break;
-                            }
-                            else
-                            {
-                                throw new ArgumentException("Введите число от 1 до 100!");
-                            }
+                            Console.WriteLine("Максимальное число задач в списке - " + taskCountLimit);
+                        break;
                         }
-                        catch (ArgumentException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                        }
-
+   
                     }
-
-                                          
-                        while (true) 
+                
+                    while (true) 
                     {
-                        try
+                     Console.WriteLine("Введите максимальную длину описания задач: ");
+                     var input = Console.ReadLine();
+                     ValidateString(input);
+                    taskLengthLimit = ParseAndValidateInt(input, min, max);
+                        if (taskLengthLimit > 0)
                         {
-
-                            Console.WriteLine("Введите максимальную длину описания задач: ");
-                            var input = Console.ReadLine();
-                            if (!Int32.TryParse(input, out taskLengthLimit) || taskLengthLimit == 0 || taskLengthLimit > 100)
-                            {
-                                throw new ArgumentException("Введите число от 1 до 100!");
-                                
-                            }
-                            
-                                Console.WriteLine("Максимальная длина задачи - " + taskLengthLimit);
+                        Console.WriteLine("Максимальная длина задачи - " + taskLengthLimit);
+                        Console.WriteLine("Для продолжения работы введите команду: ");
                             break;
-                          
-                        }
-                        catch (ArgumentException ex) { Console.WriteLine(ex.Message); }
+                        }                         
                     }
-
-                   
-
                     EchoCommand = true;
                     break;
-                }
-
-                else
-                {
-                    Console.WriteLine("Имя пользователя не может быть пустым!");
-                }
-            
+                
             }
             return userName;
         }
@@ -175,15 +154,9 @@ namespace Console_Bot
             if (EchoCommand)
             {
                 string echoText = input.Substring(6);
-                if (!string.IsNullOrEmpty(echoText))
-                {
+                ValidateString(echoText);
 
-                    Console.WriteLine(echoText);
-                }
-                else
-                {
-                    Console.WriteLine(userName + ", введите текст для эха!");
-                }
+                Console.WriteLine(echoText);
             }
         }
 
@@ -206,57 +179,27 @@ namespace Console_Bot
 
         static void AddTask(List<string> Tasks)
         {
-            try
-            {
                 if (Tasks.Count >= taskCountLimit)
 
                 {
                     throw new TaskCountLimitException(taskCountLimit);
-
-                }
-            }
-
-            catch (TaskCountLimitException ex)
-            {
-                Console.WriteLine(ex.Message);
-                return;
-            }
-
-            Console.WriteLine(userName + ", введите описание задачи: ");
-            string task = Console.ReadLine();
-            if (!string.IsNullOrWhiteSpace(task))
-            {
-                try
-                {
-
-                    if (task.Length > taskLengthLimit)
-                    {
-
-                        throw new TaskLengthLimitException(task.Length, taskLengthLimit);
-                    }
-                }
-                catch (TaskLengthLimitException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return;
                 }
             
-                try
-                {
-                    if (Tasks.Contains(task))
-                        throw new DuplicateTaskException(task);
-                }
+            Console.WriteLine(userName + ", введите описание задачи: ");
+            string task = Console.ReadLine();
+            ValidateString(task);
+            if (task.Length > taskLengthLimit)
+            {
 
-                catch (DuplicateTaskException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return;
-                }
-                Tasks.Add(task);
-                Console.WriteLine(userName + ", задача " + "\"" + task + "\" " + "добавлена");
-  
+                        throw new TaskLengthLimitException(task.Length, taskLengthLimit);
             }
-            else Console.WriteLine(userName + ", задача не может быть пустой.");
+            if (Tasks.Contains(task))
+            {
+                throw new DuplicateTaskException(task);
+            }
+            Tasks.Add(task);
+            Console.WriteLine(userName + ", задача " + "\"" + task + "\" " + "добавлена");
+  
         }
 
         static void Showtasks(List<string> Tasks)
@@ -288,6 +231,7 @@ namespace Console_Bot
                 }
                 Console.WriteLine(userName + ", введите номер задачи, которую нужно удалить: ");
                 var taskNum = Console.ReadLine();
+                ValidateString(taskNum);
                 if (Int32.TryParse(taskNum, out int removeNum))
                 {
                     if (removeNum > Tasks.Count || removeNum < 1)
@@ -318,6 +262,28 @@ namespace Console_Bot
             else Console.WriteLine(userName + ", ваш список задач пуст!:(");
             return;
         }
+
+       static public int ParseAndValidateInt(string? str, int  min, int max)
+        {
+            if (!Int32.TryParse(str, out int inputNum))
+            {
+                throw new ArgumentException(str + " не является целым числом!");
+            }
+            if (inputNum < min || inputNum > max)
+            {
+                throw new ArgumentException("Число должно быть в диапазоне от " +min + " до " + max);
+            }
+           return inputNum;     
+        }
+
+        static public void ValidateString(string? str)
+        {
+            if (String.IsNullOrWhiteSpace(str))
+            {
+                throw new ArgumentException("Строка не может быть пустой!");
+            }
+        }
+
         class DuplicateTaskException : Exception
         {
             public DuplicateTaskException(string task)
