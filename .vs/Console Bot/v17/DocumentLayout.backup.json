@@ -1,14 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Julia\\source\\repos\\Console Bot\\",
+  "WorkspaceRootPath": "D:\\repos\\github\\Console-Bot\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|c:\\users\\julia\\source\\repos\\console bot\\console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\updatehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\updatehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|c:\\users\\julia\\source\\repos\\console bot\\console bot\\console bot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\console bot.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,33 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Julia\\source\\repos\\Console Bot\\Console Bot\\Program.cs",
-              "RelativeDocumentMoniker": "Console Bot\\Program.cs",
-              "ToolTip": "C:\\Users\\Julia\\source\\repos\\Console Bot\\Console Bot\\Program.cs",
-              "RelativeToolTip": "Console Bot\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "IUserService.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\IUserService.cs",
+              "RelativeDocumentMoniker": "Console Bot\\IUserService.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\IUserService.cs",
+              "RelativeToolTip": "Console Bot\\IUserService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-27T18:50:54.853Z",
+              "WhenOpened": "2025-04-12T19:30:50.951Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
+              "RelativeDocumentMoniker": "Console Bot\\UserService.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
+              "RelativeToolTip": "Console Bot\\UserService.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABQAAABnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T19:25:30.182Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Console Bot",
-              "DocumentMoniker": "C:\\Users\\Julia\\source\\repos\\Console Bot\\Console Bot\\Console Bot.csproj",
-              "RelativeDocumentMoniker": "Console Bot\\Console Bot.csproj",
-              "ToolTip": "C:\\Users\\Julia\\source\\repos\\Console Bot\\Console Bot\\Console Bot.csproj",
-              "RelativeToolTip": "Console Bot\\Console Bot.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-02-27T18:50:24.498Z",
+              "Title": "ClassUser.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\ClassUser.cs",
+              "RelativeDocumentMoniker": "Console Bot\\ClassUser.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\ClassUser.cs",
+              "RelativeToolTip": "Console Bot\\ClassUser.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAA4AAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T19:11:34.66Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "UpdateHandler.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\UpdateHandler.cs",
+              "RelativeDocumentMoniker": "Console Bot\\UpdateHandler.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\UpdateHandler.cs",
+              "RelativeToolTip": "Console Bot\\UpdateHandler.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAAQwAcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-09T09:25:40.813Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\Program.cs",
+              "RelativeDocumentMoniker": "Console Bot\\Program.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\Program.cs",
+              "RelativeToolTip": "Console Bot\\Program.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAACYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-09T12:16:51.229Z"
             }
           ]
         }

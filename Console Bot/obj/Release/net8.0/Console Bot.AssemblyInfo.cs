@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Console Bot")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad53a0058492e230e63730062c59415bdef36b48")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4e564d8b8783791ed2d2658c1726a1c13c557cf5")]
 [assembly: System.Reflection.AssemblyProductAttribute("Console Bot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Console Bot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
