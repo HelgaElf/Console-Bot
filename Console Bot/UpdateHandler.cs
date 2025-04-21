@@ -7,48 +7,65 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Otus.ToDoList.ConsoleBot;
 using Otus.ToDoList.ConsoleBot.Types;
+using static Console_Bot.ToDoItem;
 
 namespace Console_Bot
 {
-    public class UpdateHandler : IUpdateHandler
+    class UpdateHandler : IUpdateHandler
     {
         private readonly IUserService _userService;
-        
-        public UpdateHandler(IUserService userService)
+        private readonly IToDoService _toDoService;
+
+        public UpdateHandler(IUserService userService, IToDoService toDoService)
         {
             _userService = userService;
+            _toDoService = toDoService;
         }
+        public void HandleUpdateAsync(ITelegramBotClient botClient, Update update) {
 
-        public void HandleUpdateAsync(ITelegramBotClient, Update)
-        { try
+            try
             {
                 string input = Console.ReadLine();
-                switch (input?.ToLower().Split(' ')[0])
+                string command = input?.ToLower().Split(' ')[0];
+
+                if (!Program.active && command != "/help" && command != "/info" && command != "/start")
+                {
+                    botClient.SendMessage(update.Message.Chat, $"Для начала работы введите команду /start'{update.Message.Text}'");
+                    return; 
+                }
+
+                switch (command)
                 {
                     case "/start":
-                        Start();
+                        Start(botClient, update);
                         break;
                     //case "/echo":
                       //  Echo(input);
                         break;
                     case "/help":
-                        Help();
+                        Help(botClient, update);
                         break;
                     case "/info":
-                        Info();
+                        Info(botClient, update);
                         break;
                     case "/addtask":
-                        AddTask(Tasks);
+                        AddTask(botClient, update, input);
                         break;
                     case "/showtasks":
-                        Showtasks(Tasks);
+                        Showtasks(botClient, update, Program.Tasks);
                         break;
                     case "/removetask":
-                        RemoveTasks(Tasks);
+                        RemoveTasks(botClient, update, input);
                         break;
-                    case "/exit":
-                        Exit(userName);
+                   // case "/exit":
+                    //    Exit(userName);
+                    //    break;
+                    case "/completetask":
+                    CompleteTask(botClient, update, input);
                         break;
+                   case "/showalltasks":
+                       ShowAllTasks(botClient, update, Program.Tasks);
+                       break;
                     default:
                         throw new ArgumentException("Введите одну из предложенных команд!");
                 }
@@ -57,181 +74,122 @@ namespace Console_Bot
             }
         }
 
-        private void Start()
+        private void Start(ITelegramBotClient botClient, Update update)
         {
-            while (true)
+            string userName = update.Message.From.Username ?? "User";
+            long userID = update.Message.From.Id;
+
+            User newUser =_userService.RegisterUser(userID, userName);
+
+            Program.active = true;
+            Program.isRegisteredUser = newUser.TelegramUserId;
+
+            botClient.SendMessage(update.Message.Chat, $"Пользователь зарегистрирован '{update.Message.Text}'");
+
+        }
+
+        static void Help(ITelegramBotClient botClient, Update update)
+        {
+            botClient.SendMessage(update.Message.Chat, $" чтобы начать работу, введите команду /start "
+                +"Чтобы добавить новую задачу введите /addtask \"Имя задачи\", чтобы посмотреть список задач, введите /showtask, чтобы удалить задачу, введите /removetask");
+        }
+
+        static void Info(ITelegramBotClient botClient, Update update)
+        {
+            botClient.SendMessage(update.Message.Chat, $"Версия 0.1.5 Создано 24.02.2025 {update.Message.Text}");
+        }
+
+        //static void Exit(string userName)
+        //{
+        //   ITelegramBotClient.SendMessage(chat,"До новых встреч, " + userName + "!");
+        //    Environment.Exit(0);
+        //}
+
+        void AddTask(ITelegramBotClient botClient, Update update, string newTask)
+        {
+            string userName = update.Message.From.Username ?? "User";
+            long userID = update.Message.From.Id;
+            var user = new User
             {
-                //ITelegramBotClient.SendMessage(chat,"Введите ваше имя: ");
-                
-                 var _userName = Update.Message.From.Username;
-                var _userID = Update.Message.Form.UserId;
-                ValidateString(_userName);
-                IUserService.RegisterUser(_userName, _userID);
-               ITelegramBotClient.SendMessage(chat,"Hello, " + _userName + "!");
-               ITelegramBotClient.SendMessage(chat,"Введите максимально допустимое количество задач: ");
-                while (true)
+                TelegramUserId = userID,
+                TelegramUserName = userName,
+            };
+
+            string taskText = newTask.Substring(9);
+            ValidateString(taskText);
+
+            ToDoItem task = _toDoService.Add(user, taskText);
+
+            botClient.SendMessage(update.Message.Chat, $"Пользователь '{userName}' задача '{task.Id}' добавлена '{update.Message.Text}'");
+
+        }
+
+        static void Showtasks(ITelegramBotClient botClient, Update update, List<ToDoItem> tasks)
+        {
+            var activeTasks = new List<ToDoItem>();
+            foreach (var task in tasks)
+            {
+                if (task.State == ToDoItem.ToDoItemState.Active)
                 {
-                    var input = Console.ReadLine();
-                    taskCountLimit = ParseAndValidateInt(input, min, max);
-                    if (taskCountLimit > 0)
-                    {
-                       ITelegramBotClient.SendMessage(chat,"Максимальное число задач в списке - " + taskCountLimit);
-                        break;
-                    }
-
-                }
-
-                while (true)
-                {
-                   ITelegramBotClient.SendMessage(chat,"Введите максимальную длину описания задач: ");
-                    var input = Console.ReadLine();
-                    ValidateString(input);
-                    taskLengthLimit = ParseAndValidateInt(input, min, max);
-                    if (taskLengthLimit > 0)
-                    {
-                       ITelegramBotClient.SendMessage(chat,"Максимальная длина задачи - " + taskLengthLimit);
-                       ITelegramBotClient.SendMessage(chat,"Для продолжения работы введите команду: ");
-                        break;
-                    }
-                }
-                EchoCommand = true;
-                break;
-
-            }
-            return userName;
-        }
-
-        /*private void Echo(string input)
-        {
-            if (_EchoCommand)
-            {
-                string echoText = input.Substring(6);
-                ValidateString(echoText);
-               ITelegramBotClient.SendMessage(chat,echoText);
-            }
-        }*/
-
-        static void Help()
-        {
-           ITelegramBotClient.SendMessage(chat,userName + ", чтобы начать работу, введите команду /start. Следуйте предложенным инструкциям, чтобы записать, изучить, сортировать или удалить словосочетание. " +
-                "Чтобы добавить новую задачу введите /addtask, чтобы посмотреть список задач, введите /showtask, чтобы удалить задачу, введите /removetask");
-        }
-
-        static void Info()
-        {
-           ITelegramBotClient.SendMessage(chat,"Версия 1.0. Создано 24.02.2025");
-        }
-
-        static void Exit(string userName)
-        {
-           ITelegramBotClient.SendMessage(chat,"До новых встреч, " + userName + "!");
-            Environment.Exit(0);
-        }
-
-        static void AddTask(List<string> Tasks)
-        {
-            if (Tasks.Count >= taskCountLimit)
-
-            {
-                throw new TaskCountLimitException(taskCountLimit);
-            }
-
-           ITelegramBotClient.SendMessage(chat,userName + ", введите описание задачи: ");
-            string task = Console.ReadLine();
-            ValidateString(task);
-            if (task.Length > taskLengthLimit)
-            {
-
-                throw new TaskLengthLimitException(task.Length, taskLengthLimit);
-            }
-            if (Tasks.Contains(task))
-            {
-                throw new DuplicateTaskException(task);
-            }
-            Tasks.Add(task);
-           ITelegramBotClient.SendMessage(chat,userName + ", задача " + "\"" + task + "\" " + "добавлена");
-
-        }
-
-        static void Showtasks(List<string> Tasks)
-        {
-            int taskNumber = 1;
-           ITelegramBotClient.SendMessage(chat,userName + ", ваш список задач: ");
-            if (Tasks.Count != 0)
-            {
-                for (int i = 0; i < Tasks.Count; i++)
-                {
-
-                   ITelegramBotClient.SendMessage(chat,taskNumber + ". " + Tasks[i]);
-                    taskNumber++;
+                    activeTasks.Add(task);
                 }
             }
-            elseITelegramBotClient.SendMessage(chat,userName + ", ваш список задач пуст!");
 
-        }
-        static void RemoveTasks(List<string> Tasks)
-        {
-            if (Tasks.Count != 0)
+            if (activeTasks.Count == 0)
             {
-               ITelegramBotClient.SendMessage(chat,userName + ", ваш список задач: ");
-                int count = 1;
-                foreach (var task in Tasks)
+                botClient.SendMessage(update.Message.Chat, $"Нет активных задач!");
+            }
+            else {
+                foreach (var task in tasks)
                 {
-                   ITelegramBotClient.SendMessage(chat,count + ". " + task);
-                    count++;
-                }
-               ITelegramBotClient.SendMessage(chat,userName + ", введите номер задачи, которую нужно удалить: ");
-                var taskNum = Console.ReadLine();
-                ValidateString(taskNum);
-                if (Int32.TryParse(taskNum, out int removeNum))
-                {
-                    if (removeNum > Tasks.Count || removeNum < 1)
-                    {
-                       ITelegramBotClient.SendMessage(chat,userName + ", задачи с номером " + removeNum + " не существует.");
-                        return;
-                    }
-                    else
-                    {
-                       ITelegramBotClient.SendMessage(chat,userName + ", задача " + Tasks[removeNum - 1] + " удалена!");
-                        Tasks.RemoveAt(removeNum - 1);
-                        return;
-                    }
-                }
-
-                elseITelegramBotClient.SendMessage(chat,userName + ", введите корректный номер задачи: ");
-
-                for (int i = 0; i <= Tasks.Count; i++)
-                {
-                    if (i == removeNum - 1)
-                    {
-                        Tasks.RemoveAt(i);
-                       ITelegramBotClient.SendMessage(chat,"Задача " + Tasks[i + 1] + " удалена!");
-                        return;
-                    }
+                    botClient.SendMessage(update.Message.Chat, $"- '{task.Name}' - {task.CreatedAt} - {task.Id}"  );
                 }
             }
-            elseITelegramBotClient.SendMessage(chat,userName + ", ваш список задач пуст!:(");
-            return;
         }
-
-        static public int ParseAndValidateInt(string? str, int min, int max)
-        {
-            if (!Int32.TryParse(str, out int inputNum))
+         void RemoveTasks(ITelegramBotClient botClient, Update update, string input)
+         {
+            if (Program.Tasks.Count != 0)
             {
-                throw new ArgumentException(str + " не является целым числом!");
+                string taskGuid = input.Substring(12);
+                if (Guid.TryParse(taskGuid, out var id))
+                {
+                    _toDoService.Delete(id);
+                    botClient.SendMessage(update.Message.Chat, $"Задача '{id}' удалена '{update.Message.Text}");
+                }
+                else
+                {
+                    throw new ArgumentException("Невалидный id задачи");
+                }
             }
-            if (inputNum < min || inputNum > max)
+            else
             {
-                throw new ArgumentException("Число должно быть в диапазоне от " + min + " до " + max);
+                throw new ArgumentException("Список задач пуст!");
             }
-            return inputNum;
-        }
+         }
 
         static public void ValidateString(string? str)
         {
             if (String.IsNullOrWhiteSpace(str))
             {
                 throw new ArgumentException("Строка не может быть пустой!");
+            }
+        }
+
+         void CompleteTask(ITelegramBotClient botClient, Update update, string input)
+        {
+            string taskGuid = input.Substring(14);
+            if (Guid.TryParse(taskGuid, out var id))
+            {
+                _toDoService.MarkCompleted(id);
+                botClient.SendMessage(update.Message.Chat, $"Задача '{id}' отмечена как выполненная '{update.Message.Text}");
+            }
+        }
+
+        static void ShowAllTasks (ITelegramBotClient botClient, Update update, List<ToDoItem> tasks)
+        {
+            foreach (var task in tasks)
+            {
+                botClient.SendMessage(update.Message.Chat, $" ({task.State}) {task.Name} - {task.CreatedAt} - {task.Id}");
             }
         }
 

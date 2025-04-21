@@ -7,12 +7,16 @@
       "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\updatehandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\todoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\todoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\todoitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\todoitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\itodoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\itodoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\iuserservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -21,6 +25,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|d:\\repos\\github\\console-bot\\console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D325948F-DC9F-4108-A512-5B6EC0A70183}|Console Bot\\Console Bot.csproj|solutionrelative:console bot\\classuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,43 +42,83 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
+              "RelativeDocumentMoniker": "Console Bot\\UserService.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
+              "RelativeToolTip": "Console Bot\\UserService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABMAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-12T19:25:30.182Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "IToDoService.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\IToDoService.cs",
+              "RelativeDocumentMoniker": "Console Bot\\IToDoService.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\IToDoService.cs",
+              "RelativeToolTip": "Console Bot\\IToDoService.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAgAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T21:06:01.909Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ToDoItem.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\ToDoItem.cs",
+              "RelativeDocumentMoniker": "Console Bot\\ToDoItem.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\ToDoItem.cs",
+              "RelativeToolTip": "Console Bot\\ToDoItem.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABQAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T20:02:09.402Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ToDoService.cs",
+              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\ToDoService.cs",
+              "RelativeDocumentMoniker": "Console Bot\\ToDoService.cs",
+              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\ToDoService.cs",
+              "RelativeToolTip": "Console Bot\\ToDoService.cs",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAkwDwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-17T18:43:21.481Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "IUserService.cs",
               "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\IUserService.cs",
               "RelativeDocumentMoniker": "Console Bot\\IUserService.cs",
               "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\IUserService.cs",
               "RelativeToolTip": "Console Bot\\IUserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAvAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAoAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-12T19:30:50.951Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "UserService.cs",
-              "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
-              "RelativeDocumentMoniker": "Console Bot\\UserService.cs",
-              "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\UserService.cs",
-              "RelativeToolTip": "Console Bot\\UserService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAxAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-12T19:25:30.182Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 7,
               "Title": "ClassUser.cs",
               "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\ClassUser.cs",
               "RelativeDocumentMoniker": "Console Bot\\ClassUser.cs",
               "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\ClassUser.cs",
               "RelativeToolTip": "Console Bot\\ClassUser.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-12T19:11:34.66Z",
               "EditorCaption": ""
@@ -79,20 +131,20 @@
               "RelativeDocumentMoniker": "Console Bot\\UpdateHandler.cs",
               "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\UpdateHandler.cs",
               "RelativeToolTip": "Console Bot\\UpdateHandler.cs",
-              "ViewState": "AgIAADYAAAAAAAAAAAAYwEQAAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAowHwAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-09T09:25:40.813Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\repos\\github\\Console-Bot\\Console Bot\\Program.cs",
               "RelativeDocumentMoniker": "Console Bot\\Program.cs",
               "ToolTip": "D:\\repos\\github\\Console-Bot\\Console Bot\\Program.cs",
               "RelativeToolTip": "Console Bot\\Program.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAQwCoAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAABIAAAAqAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-03-09T12:16:51.229Z",
               "EditorCaption": ""

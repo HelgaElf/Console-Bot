@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Otus.ToDoList.ConsoleBot;
 using Otus.ToDoList.ConsoleBot.Types;
@@ -13,31 +14,47 @@ namespace Console_Bot
     {
         public static bool EchoCommand = false;
         public static string userName = string.Empty;
-        public static List<string> Tasks = new List<string>();
+        public static List<ToDoItem> Tasks = new List<ToDoItem>();
         public static int taskCountLimit;
         public static int taskLengthLimit;
         public static int min = 0;
         public static int max = 100;
+        public static long isRegisteredUser;
+        public static bool active = false;
+
         static void Main(string[] args)
         {
-            var handler = new UpdateHandler(userName, Tasks, taskCountLimit, taskLengthLimit);
+            IUserService userService = new UserService();
+            var handler = new UpdateHandler(userService);
+            var botClient = new ConsoleBotClient();
+            
+            botClient.StartReceiving(handler);
 
-            Console.WriteLine("Добро пожаловать! Выберите команду: /start (для начала работы), /help (если требуется помощь), /info (о боте), /exit (для выхода)");
-            while (true)
+            //var botClient = new ConsoleBotClient();
+            // botClient.StartReceiving(handler);
+
+            //var handler = new UpdateHandler(botClient, update);
+
+            while(true)
             {
-                try
+                string input = Console.ReadLine();
+                var update = new Update { Message = new Message { Text = input, Chat = new Chat { Id = 0 } } };
+                handler.HandleUpdateAsync(botClient, update);
+            }
+
+            handler.HandleUpdateAsync(botClient, new Update
+            {
+                Message = new Message
                 {
-                    handler.HandlerUpdateAsync();
+                    Text = active ? "/start" : "/help",
+                    Chat = new Chat { Id = 123 }
                 }
-                catch (Exception ex)
+            });
+            Console.WriteLine("Добро пожаловать! Выберите команду:  /help (если требуется помощь), /info (о боте)");
+            
+               catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    /* Console.WriteLine("Ошибка: " + ex.Message);
-                     Console.WriteLine(ex.StackTrace);
-                     Console.WriteLine(ex.InnerException);
-                     Console.WriteLine("Выберите команду: /start (для начала работы), /help (если требуется помощь), /info (о боте), /exit (для выхода)");
-                */
-
                     var userService = new UserService(); // Создаём сервис
                     var updateHandler = new UpdateHandler(userService);
                 }
