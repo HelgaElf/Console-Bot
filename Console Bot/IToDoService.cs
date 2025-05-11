@@ -13,7 +13,11 @@ namespace Console_Bot
 	  ToDoItem Add(User user, string name);
 	  void MarkCompleted(Guid id);
 	  void Delete(Guid id);
-	}
+      IReadOnlyList<ToDoItem> GetAllByUserId(Guid userId);
+      int CountActive(Guid userId);
+
+      IReadOnlyList<ToDoItem> Find(User user, string namePrefix);
+    }
 
 }
 

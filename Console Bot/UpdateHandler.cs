@@ -1,9 +1,11 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Otus.ToDoList.ConsoleBot;
 using Otus.ToDoList.ConsoleBot.Types;
@@ -15,13 +17,16 @@ namespace Console_Bot
     {
         private readonly IUserService _userService;
         private readonly IToDoService _toDoService;
+        private readonly IToDoReportService _toDoReportService;
 
-        public UpdateHandler(IUserService userService, IToDoService toDoService)
+        public UpdateHandler(IUserService userService, IToDoService toDoService, IToDoReportService toDoReportService)
         {
             _userService = userService;
             _toDoService = toDoService;
+            _toDoReportService = toDoReportService;
         }
-        public void HandleUpdateAsync(ITelegramBotClient botClient, Update update) {
+        public void HandleUpdateAsync(ITelegramBotClient botClient, Update update) 
+        {
 
             try
             {
@@ -66,11 +71,19 @@ namespace Console_Bot
                    case "/showalltasks":
                        ShowAllTasks(botClient, update, Program.Tasks);
                        break;
+                    case "/report":
+                        Report(botClient, update, Program.Tasks);
+                        break;
+                    case "/find":
+                        Find(botClient, update, input); //какой тут нужен метод?
+                        break;
                     default:
                         throw new ArgumentException("Введите одну из предложенных команд!");
                 }
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            { 
+
             }
         }
 
@@ -193,6 +206,43 @@ namespace Console_Bot
             }
         }
 
+         void Report(ITelegramBotClient botClient, Update update, List<ToDoItem> tasks)
+        {
+            long telegramUserID = update.Message.From.Id;
+            User user = _userService.GetUserByTelegramUserID(telegramUserID);
+
+            if (user != null)
+            {
+               
+                var report = _toDoReportService.GetUserStats(user.UserId);
+                botClient.SendMessage(update.Message.Chat, $"Статистика по задачам на  {report.generatedAt :dd.MM.yyyy HH:mm:ss}. Всего {report.total}; " +
+                    $"Завершённых: {report.completed}; Активных: {report.active}.");
+            }
+        }
+
+         void Find (ITelegramBotClient botClient, Update update, string input)
+         {
+            long telegramUserID = update.Message.From.Id;
+            User user = _userService.GetUserByTelegramUserID(telegramUserID);
+
+            string namePrefix = input.Substring(6);
+            ValidateString(namePrefix);
+            var tasks = _toDoService.Find(user, namePrefix);
+            if (tasks == null) 
+            {
+                botClient.SendMessage(update.Message.Chat, $"Задачи не найдены!");
+            }
+            else
+            {
+                foreach (var task in tasks)
+                {
+                    botClient.SendMessage(update.Message.Chat, $"- '{task.Name}' - {task.CreatedAt} - {task.Id}");
+                }
+            }
+         }
+
+
+        //классы 
         class DuplicateTaskException : Exception
         {
             public DuplicateTaskException(string task)
@@ -217,4 +267,4 @@ namespace Console_Bot
         }
     }
 }
-}
+

@@ -9,6 +9,7 @@ namespace Console_Bot
    public interface IUserService
     {
             User RegisterUser(long telegramUserId,  string telegramUserName);
-            User? GetUser(long telegramUserId);
+            User? GetUser(Guid UserId);
+            User? GetUserByTelegramUserID(long telegramUserId);
     }
 }

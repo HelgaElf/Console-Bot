@@ -10,67 +10,74 @@ namespace Console_Bot
 {
     public class ToDoService : IToDoService
     {
-       public IReadOnlyList<ToDoItem> GetActiveByUserId(Guid userId)
+        private readonly IToDoRepository _inMemoryToDo;
+        public ToDoService(IToDoRepository toDoRepository)
         {
-            var activeTasks = new List<ToDoItem>();
-            foreach (var task in Program.Tasks)
-            {
-                if (task.State == ToDoItem.ToDoItemState.Active && task.User.UserId == userId)
-                {
-                    activeTasks.Add(task);
-                }
-            }
-            if (activeTasks.Count == 0)
-            {
-                throw new Exception("Нет активных задач");
-            }
+            _inMemoryToDo = toDoRepository;
+        }
 
+        public IReadOnlyList<ToDoItem> GetActiveByUserId(Guid userId)
+        {
+           var activeTasks = _inMemoryToDo.GetActiveByUserId(userId);
             return activeTasks;
         }  
         public ToDoItem Add(User user, string name)
         {
             if (name == null) throw new ArgumentNullException("Введите название задачи");
-            var item = new ToDoItem { 
+           var exist = _inMemoryToDo.ExistsByName(user.UserId, name);
+            if (exist)
+            {
+                throw new ArgumentException("Задача с таким именем уже существует");
+            }
+
+            var item = new ToDoItem
+            { 
                 Id = Guid.NewGuid(),
                 User = user,
                 Name = name,  
                 CreatedAt = DateTime.Now,
                 State = ToDoItem.ToDoItemState.Active
             };
-            Program.Tasks.Add(item);
+           _inMemoryToDo.Add(item);
             return item;
         }
        public void MarkCompleted(Guid id)
         {
-            var index = GetIndex(id);
-            Program.Tasks[index].State = ToDoItem.ToDoItemState.Completed;
-            Program.Tasks[index].StateChangedAt = DateTime.Now;
+            var task = _inMemoryToDo.Get(id);
 
-        }
-        public void Delete(Guid id) {
-            var index = GetIndex(id);
-            Program.Tasks.RemoveAt(index);
-        }
-
-        private int GetIndex(Guid id)
-        {
-            bool findIndex = false;
-            int index = 0;
-            foreach (var task in Program.Tasks)
+            if (task != null)
             {
-                if (task.Id == id)
-                {
-                    findIndex = true;
-                    break;
-                }
-                index++;
+                task.State = ToDoItem.ToDoItemState.Completed;
+                task.StateChangedAt = DateTime.Now;
+                _inMemoryToDo.Update(task);
             }
-            if (findIndex == false)
-            { throw new ArgumentException("Такой id не существует"); }
+            else throw new ArgumentException("Не существует задачи с ID - " + id);
+          
+       }
+        public void Delete(Guid id) {
+
+           _inMemoryToDo.Delete(id);
             
-            return index;
+        }
+
+        public IReadOnlyList<ToDoItem> GetAllByUserId(Guid userId)
+        {
+            var allTasks = _inMemoryToDo.GetAllByUserId(userId);
+            return allTasks;
+        }
+        public int CountActive(Guid userId)
+        {
+            int activeCount =_inMemoryToDo.CountActive(userId);
+            return activeCount;
+        }
+
+       public IReadOnlyList<ToDoItem> Find(User user, string namePrefix)
+        {
+            return _inMemoryToDo.Find(user.UserId,
+        item => item.Name.StartsWith(namePrefix, StringComparison.OrdinalIgnoreCase));
         }
     }
-
-
 }
+
+
+

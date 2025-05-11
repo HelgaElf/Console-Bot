@@ -10,18 +10,39 @@ namespace Console_Bot
 {
     public class UserService : IUserService
     {
-        public User RegisterUser(long telegramUserId, string telegramUserName)
+        private readonly IUserRepository _userRepository;
+        
+        public UserService(IUserRepository userRepository)
         {
-            return new User { TelegramUserId = telegramUserId, TelegramUserName = telegramUserName };
+            _userRepository = userRepository;
         }
 
-       public  User? GetUser(long telegramUserId)
+        public User RegisterUser(long telegramUserId, string telegramUserName)
         {
-            if (telegramUserId != null)
+           User newUser = new User
             {
-                return new User { TelegramUserId = telegramUserId, TelegramUserName = "test" };
-            }
-            else return null;
+                TelegramUserId = telegramUserId,
+                TelegramUserName = telegramUserName,
+                UserId = Guid.NewGuid()
+            };
+
+            _userRepository.Add(newUser);
+
+            return newUser;
         }
+
+       public User? GetUser(Guid UserId)
+        {
+            var user = _userRepository.GetUser(UserId);
+            return user;
+        }
+
+       public User? GetUserByTelegramUserID(long telegramUserId)
+        {
+            var user = _userRepository.GetUserByTelegramUserId(telegramUserId);
+            return user;
+        }
+
+
     }
 }
