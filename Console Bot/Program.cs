@@ -1,56 +1,63 @@
-﻿namespace Console_Bot
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Data;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using Otus.ToDoList.ConsoleBot;
+using Otus.ToDoList.ConsoleBot.Types;
+namespace Console_Bot
 {
     internal class Program
     {
+        public static bool EchoCommand = false;
+        public static string userName = string.Empty;
+        public static List<ToDoItem> Tasks = new List<ToDoItem>();
+        public static int taskCountLimit;
+        public static int taskLengthLimit;
+        public static int min = 0;
+        public static int max = 100;
+        public static long isRegisteredUser;
+        public static bool active = false;
+
         static void Main(string[] args)
         {
-            string userName = string.Empty;
-            Console.WriteLine("Добро пожаловать! Выберите команду: /start (для начала работы), /help (если требуется помощь), /info (о боте), /exit (для выхода)");
-            //Console.ReadLine();
-            bool EchoCommand = false;
-            while (true)
+            IUserService userService = new UserService();
+            var handler = new UpdateHandler(userService);
+            var botClient = new ConsoleBotClient();
+            
+            botClient.StartReceiving(handler);
+
+            //var botClient = new ConsoleBotClient();
+            // botClient.StartReceiving(handler);
+
+            //var handler = new UpdateHandler(botClient, update);
+
+            while(true)
             {
-                
                 string input = Console.ReadLine();
-                if (input == "/start")                    
-                {
-                    Console.WriteLine("Введите ваше имя: ");
-                    userName = Console.ReadLine();
-                    Console.WriteLine("Hello, " + userName + "!");
-                    EchoCommand = true;
-                }
+                var update = new Update { Message = new Message { Text = input, Chat = new Chat { Id = 0 } } };
+                handler.HandleUpdateAsync(botClient, update);
+            }
 
-                if (input.StartsWith("/echo") && EchoCommand)
+            handler.HandleUpdateAsync(botClient, new Update
+            {
+                Message = new Message
                 {
-                    //var len = input.Length;
-                    //string echoText = input.Substring(2);
-                    //Console.WriteLine(echoText);
-                    if (echoText != string.IsEmpty(input))
-                        Console.WriteLine(echoText);
-                    else Console.WriteLine("Введите текст для эха!");
+                    Text = active ? "/start" : "/help",
+                    Chat = new Chat { Id = 123 }
                 }
-                if  (input == "/help")
+            });
+            Console.WriteLine("Добро пожаловать! Выберите команду:  /help (если требуется помощь), /info (о боте)");
+            
+               catch (Exception ex)
                 {
-                    Console.WriteLine("Чтобы начать работу, введите команду /start. Следуйте предложенным интструкциям, чтобы записать, изучить, сортировать или удалить словосочетание");
+                    Console.WriteLine(ex.Message);
+                    var userService = new UserService(); // Создаём сервис
+                    var updateHandler = new UpdateHandler(userService);
                 }
-
-                if(input == "/info")
-                {
-                    Console.WriteLine("Версия 1.0. Создано 24.02.2025");
-                }
-
-                if(input == "/exit")
-                {
-                    Console.WriteLine("До новых встреч, " + userName + "!");
-                    break;
-                }
-
-                else
-                {
-                    Console.WriteLine("Введите одну из предложенных команд");
-                }
-
-             
             }
         }
     }
