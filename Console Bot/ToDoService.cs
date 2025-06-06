@@ -16,15 +16,15 @@ namespace Console_Bot
             _inMemoryToDo = toDoRepository;
         }
 
-        public IReadOnlyList<ToDoItem> GetActiveByUserId(Guid userId)
+        public async Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct)
         {
-           var activeTasks = _inMemoryToDo.GetActiveByUserId(userId);
-            return activeTasks;
+            var activeTasks = await _inMemoryToDo.GetActiveByUserId(userId, ct);
+            return await Task.FromResult(activeTasks);
         }  
-        public ToDoItem Add(User user, string name)
+        public async Task <ToDoItem> Add(User user, string name, CancellationToken ct)
         {
             if (name == null) throw new ArgumentNullException("Введите название задачи");
-           var exist = _inMemoryToDo.ExistsByName(user.UserId, name);
+           var exist = await _inMemoryToDo.ExistsByName(user.UserId, name, ct);
             if (exist)
             {
                 throw new ArgumentException("Задача с таким именем уже существует");
@@ -38,43 +38,43 @@ namespace Console_Bot
                 CreatedAt = DateTime.Now,
                 State = ToDoItem.ToDoItemState.Active
             };
-           _inMemoryToDo.Add(item);
-            return item;
+          await _inMemoryToDo.Add(item, ct);
+            return await Task.FromResult(item);
         }
-       public void MarkCompleted(Guid id)
+       public async Task MarkCompleted(Guid id, CancellationToken ct)
         {
-            var task = _inMemoryToDo.Get(id);
+            var task = await _inMemoryToDo.Get(id, ct);
 
             if (task != null)
             {
                 task.State = ToDoItem.ToDoItemState.Completed;
                 task.StateChangedAt = DateTime.Now;
-                _inMemoryToDo.Update(task);
+                await _inMemoryToDo.Update(task, ct);
             }
             else throw new ArgumentException("Не существует задачи с ID - " + id);
           
        }
-        public void Delete(Guid id) {
+        public async Task Delete(Guid id, CancellationToken ct) {
 
-           _inMemoryToDo.Delete(id);
+           await _inMemoryToDo.Delete(id, ct);
             
         }
 
-        public IReadOnlyList<ToDoItem> GetAllByUserId(Guid userId)
+        public async Task <IReadOnlyList<ToDoItem>> GetAllByUserId(Guid userId, CancellationToken ct)
         {
-            var allTasks = _inMemoryToDo.GetAllByUserId(userId);
-            return allTasks;
+            var allTasks = await _inMemoryToDo.GetAllByUserId(userId, ct);
+            return await Task.FromResult(allTasks);
         }
-        public int CountActive(Guid userId)
+        public async Task <int> CountActive(Guid userId, CancellationToken ct)
         {
-            int activeCount =_inMemoryToDo.CountActive(userId);
-            return activeCount;
+            int activeCount =await _inMemoryToDo.CountActive(userId, ct);
+            return await Task.FromResult(activeCount);
         }
 
-       public IReadOnlyList<ToDoItem> Find(User user, string namePrefix)
+       public async Task<IReadOnlyList<ToDoItem>> Find(User user, string namePrefix, CancellationToken ct)
         {
-            return _inMemoryToDo.Find(user.UserId,
-        item => item.Name.StartsWith(namePrefix, StringComparison.OrdinalIgnoreCase));
+            return await _inMemoryToDo.Find(user.UserId,
+        item => item.Name.StartsWith(namePrefix, StringComparison.OrdinalIgnoreCase), ct);
         }
     }
 }

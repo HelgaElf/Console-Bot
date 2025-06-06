@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Otus.ToDoList.ConsoleBot.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,49 +7,39 @@ using System.Threading.Tasks;
 
 namespace Console_Bot
 {
-    class InMemoryUserRepository : IUserRepository
+    public class InMemoryUserRepository : IUserRepository
     {
         public static List <User> UserList = new List<User>();
 
-        private readonly IUserRepository _userRepository;
-        public InMemoryUserRepository (IUserRepository userRepository)
+        public async Task<User> GetUser(Guid userId, CancellationToken ct)
         {
-            _userRepository = userRepository;
-        }
-
-        public User? GetUser(Guid userId)
-        {
-                User _user = null;
             foreach (var user in UserList)
             {
                 if (user.UserId == userId)
                 {
-                    _user = user;
-                    break;
+                    return await Task.FromResult(user);
                 }
             }
-            return _user;
+            return await Task.FromResult<User>(null);
         }
-        public User? GetUserByTelegramUserId(long telegramUserId)
+        public async Task<User> GetUserByTelegramUserId(long telegramUserId, CancellationToken ct)
         {
-                User _user = null;
             foreach (var user in UserList)
             {
                 if (telegramUserId == user.TelegramUserId)
                 {
-                    _user = user;
-                    break;
+                    return await Task.FromResult(user);
                 }
-            }    
-            return _user;            
+            }
+            return await Task.FromResult<User>(null);
         }
-        public void Add(User user)
+        public async Task Add(User user, CancellationToken ct)
         {
             if(user == null)
                 throw new ArgumentNullException("user");
             if (UserList.Contains(user))
                 throw new Exception("User already exists");
-            UserList.Add(user);
+            UserList.Add(user);   
         }
         
     }

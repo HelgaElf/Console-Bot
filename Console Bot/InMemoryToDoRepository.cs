@@ -11,7 +11,7 @@ namespace Console_Bot
     public class InMemoryToDoRepository : IToDoRepository
     {
         //описываем методы класса
-        public IReadOnlyList<ToDoItem> GetAllByUserId(Guid userId)
+        public async Task <IReadOnlyList<ToDoItem>> GetAllByUserId(Guid userId, CancellationToken ct)
         {
             var allTasks = new List<ToDoItem>();
             foreach (var task in Program.Tasks)
@@ -26,20 +26,21 @@ namespace Console_Bot
                 throw new Exception("Нет задач пользователя");
             }
 
-            return allTasks;
+            return await Task.FromResult(allTasks);
         }
-        public IReadOnlyList<ToDoItem> Find(Guid userId, Func<ToDoItem, bool> predicate)
+        public async Task <IReadOnlyList<ToDoItem>> Find(Guid userId, Func<ToDoItem, bool> predicate, CancellationToken ct)
             {
-            return Program.Tasks
+            var result = Program.Tasks
                .Where(item => item.User.UserId == userId)  
                .Where(predicate)                     
                .ToList()                             
-               .AsReadOnly();                         
+               .AsReadOnly();  
+            return result;
             }
             
         
         //Возвращает ToDoItem для UserId со статусом Active
-       public IReadOnlyList<ToDoItem> GetActiveByUserId(Guid userId)
+       public async Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct)
         {
             var activeTasks = new List<ToDoItem>();
             foreach (var task in Program.Tasks)
@@ -54,9 +55,9 @@ namespace Console_Bot
                 throw new Exception("Нет активных задач");
             }
 
-            return activeTasks;
+            return await Task.FromResult(activeTasks);
         }
-       public ToDoItem? Get(Guid id)
+       public async Task <ToDoItem?> Get(Guid id, CancellationToken ct)
         {
             ToDoItem getTask =  null;
             foreach (var task in Program.Tasks)
@@ -66,13 +67,13 @@ namespace Console_Bot
                    getTask = task;
                 }
             }
-            return getTask;
+            return await Task.FromResult(getTask);
         }
-        public void Add(ToDoItem item)
+        public async Task Add(ToDoItem item, CancellationToken ct)
         {
-            Program.Tasks.Add(item);
+            await Task.Run(() => Program.Tasks.Add(item), ct);
         }
-       public void Update(ToDoItem item)
+       public async Task Update(ToDoItem item, CancellationToken ct)
         {
             var index = Program.Tasks.FindIndex(x => x.Id == item.Id);
             if (index == -1)
@@ -80,7 +81,7 @@ namespace Console_Bot
 
             Program.Tasks[index] = item;
         }
-        public void Delete(Guid id)
+        public async Task Delete(Guid id, CancellationToken ct)
         {
             foreach (var task in Program.Tasks)
             {
@@ -93,20 +94,20 @@ namespace Console_Bot
             throw new ArgumentException("Такой задачи нет");
         }
         //Проверяет есть ли задача с таким именем у пользователя
-        public bool ExistsByName(Guid userId, string name)
+        public async Task <bool> ExistsByName(Guid userId, string name, CancellationToken ct)
         {
             foreach (var task in Program.Tasks)
             {
                 if (task.User.UserId == userId && task.Name == name)
                 {
-                    return true;
+                    return await Task.FromResult(true);
                 }
             }
 
-            return false;
+            return await Task.FromResult(false);
         }
         //Возвращает количество активных задач у пользователя
-        public int CountActive(Guid userId)
+        public async Task <int> CountActive(Guid userId, CancellationToken ct)
         {
             int count = 0;
             foreach (var task in Program.Tasks)
@@ -116,7 +117,7 @@ namespace Console_Bot
                     count++;
                 }
             }
-            return count;
+            return await Task.FromResult(count);
         }
         
     }

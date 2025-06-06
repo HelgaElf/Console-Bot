@@ -9,12 +9,13 @@ namespace Console_Bot
 {
     public class ToDoReportService : IToDoReportService
     {
-      public  (int total, int completed, int active, DateTime generatedAt) GetUserStats(Guid userId)
+      public async Task<(int total, int completed, int active, DateTime generatedAt)> GetUserStats(Guid userId, CancellationToken ct)
         {
             int totalCount = 0;
             int activeCount = 0;
             int completeCount = 0;
             var tasks = new List<ToDoItem>();
+            
             foreach (var item in tasks)
             {
                 if(item.User.UserId == userId)
@@ -33,13 +34,13 @@ namespace Console_Bot
                 }
             
             }
-
-            return (
+            var result = (
                 total: totalCount,
                 completed: completeCount,
                 active: activeCount,
                 generatedAt: DateTime.UtcNow
                     );
+             return result;
         }
     }
 }

@@ -8,15 +8,15 @@ namespace Console_Bot
 {
     public interface IToDoService
     {
-     	
-	  IReadOnlyList<ToDoItem> GetActiveByUserId(Guid userId);
-	  ToDoItem Add(User user, string name);
-	  void MarkCompleted(Guid id);
-	  void Delete(Guid id);
-      IReadOnlyList<ToDoItem> GetAllByUserId(Guid userId);
-      int CountActive(Guid userId);
 
-      IReadOnlyList<ToDoItem> Find(User user, string namePrefix);
+      Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct);
+	  Task <ToDoItem> Add(User user, string name, CancellationToken ct);
+	  Task MarkCompleted(Guid id, CancellationToken ct);
+	  Task Delete(Guid id, CancellationToken ct);
+      Task <IReadOnlyList<ToDoItem>> GetAllByUserId(Guid userId, CancellationToken ct);
+      Task<int> CountActive(Guid userId, CancellationToken ct);
+
+      Task <IReadOnlyList<ToDoItem>> Find(User user, string namePrefix, CancellationToken ct);
     }
 
 }

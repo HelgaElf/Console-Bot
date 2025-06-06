@@ -17,7 +17,7 @@ namespace Console_Bot
             _userRepository = userRepository;
         }
 
-        public User RegisterUser(long telegramUserId, string telegramUserName)
+        public async Task<User> RegisterUser(long telegramUserId, string telegramUserName, CancellationToken ct)
         {
            User newUser = new User
             {
@@ -26,20 +26,21 @@ namespace Console_Bot
                 UserId = Guid.NewGuid()
             };
 
-            _userRepository.Add(newUser);
 
-            return newUser;
+            await _userRepository.Add(newUser, ct);
+            return await Task.FromResult(newUser);
+
         }
 
-       public User? GetUser(Guid UserId)
+       public async Task <User> GetUser(Guid UserId, CancellationToken ct)
         {
-            var user = _userRepository.GetUser(UserId);
+            var user = await _userRepository.GetUser(UserId, ct);
             return user;
         }
 
-       public User? GetUserByTelegramUserID(long telegramUserId)
+       public async Task <User> GetUserByTelegramUserID(long telegramUserId, CancellationToken ct)
         {
-            var user = _userRepository.GetUserByTelegramUserId(telegramUserId);
+            var user = await _userRepository.GetUserByTelegramUserId(telegramUserId, ct);
             return user;
         }
 
