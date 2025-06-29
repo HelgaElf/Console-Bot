@@ -5,8 +5,6 @@ VisualStudioVersion = 17.13.35806.99
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console Bot", "Console Bot\Console Bot.csproj", "{D325948F-DC9F-4108-A512-5B6EC0A70183}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Otus.ToDoList.ConsoleBot", "..\C-Sharp-Basic\Homeworks\07 Асинхронность, делегаты и события\Otus.ToDoList.ConsoleBot\Otus.ToDoList.ConsoleBot.csproj", "{8D18D15B-2ACA-A9A8-97A0-34BEDA5E3C67}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{D325948F-DC9F-4108-A512-5B6EC0A70183}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D325948F-DC9F-4108-A512-5B6EC0A70183}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D325948F-DC9F-4108-A512-5B6EC0A70183}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D18D15B-2ACA-A9A8-97A0-34BEDA5E3C67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D18D15B-2ACA-A9A8-97A0-34BEDA5E3C67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D18D15B-2ACA-A9A8-97A0-34BEDA5E3C67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D18D15B-2ACA-A9A8-97A0-34BEDA5E3C67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
