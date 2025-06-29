@@ -9,7 +9,7 @@ namespace Console_Bot
 {
     public class ToDoReportService : IToDoReportService
     {
-      public async Task<(int total, int completed, int active, DateTime generatedAt)> GetUserStats(Guid userId, CancellationToken ct)
+      public Task<(int total, int completed, int active, DateTime generatedAt)> GetUserStats(Guid userId, CancellationToken ct)
         {
             int totalCount = 0;
             int activeCount = 0;
@@ -32,7 +32,6 @@ namespace Console_Bot
 
                     totalCount++;
                 }
-            
             }
             var result = (
                 total: totalCount,
@@ -40,7 +39,7 @@ namespace Console_Bot
                 active: activeCount,
                 generatedAt: DateTime.UtcNow
                     );
-             return result;
+             return Task.FromResult(result);
         }
     }
 }

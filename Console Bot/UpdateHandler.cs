@@ -16,8 +16,8 @@ namespace Console_Bot
     public delegate void MessageEventHandler(string message);
     class UpdateHandler : IUpdateHandler
     {
-        public event MessageEventHandler OnHandleUpdateStarted;
-        public event MessageEventHandler OnHandleUpdateCompleted;
+        public event MessageEventHandler ? OnHandleUpdateStarted;
+        public event MessageEventHandler? OnHandleUpdateCompleted;
         private readonly IUserService _userService;
         private readonly IToDoService _toDoService;
         private readonly IToDoReportService _toDoReportService;
@@ -30,14 +30,17 @@ namespace Console_Bot
         }
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct)
         {
-            try
-            {
+            //try
+           // {
                 string messageText = update.Message.Text;
                 OnHandleUpdateStarted?.Invoke(messageText);
                 string input = update.Message.Text;
+                long userID = update.Message.From.Id;
+                var user =  await _userService.GetUserByTelegramUserID(userID,ct);
+
                 string command = input?.ToLower().Split(' ')[0];
 
-                if (!Program.active && command != "/help" && command != "/info" && command != "/start")
+                if (user == null && command != "/help" && command != "/info" && command != "/start")
                 {
                     await botClient.SendMessage(update.Message.Chat, $"Для начала работы введите команду /start'{update.Message.From.Username}'", ct);
 
@@ -48,9 +51,7 @@ namespace Console_Bot
                     case "/start":
                         Start(botClient, update, ct);
                         break;
-                        //case "/echo":
-                        //  Echo(input);
-                        break;
+
                     case "/help":
                         Help(botClient, update, ct);
                         break;
@@ -61,7 +62,7 @@ namespace Console_Bot
                         AddTask(botClient, update, input, ct);
                         break;
                     case "/showtasks":
-                        Showtasks(botClient, update, Program.Tasks, ct);
+                        Showtasks(botClient, update, ct);
                         break;
                     case "/removetask":
                         RemoveTasks(botClient, update, input, ct);
@@ -73,10 +74,10 @@ namespace Console_Bot
                         CompleteTask(botClient, update, input, ct);
                         break;
                     case "/showalltasks":
-                        ShowAllTasks(botClient, update, Program.Tasks, ct);
+                        ShowAllTasks(botClient, update, ct);
                         break;
                     case "/report":
-                        Report(botClient, update, Program.Tasks, ct);
+                        Report(botClient, update, ct);
                         break;
                     case "/find":
                         Find(botClient, update, input, ct);
@@ -86,12 +87,6 @@ namespace Console_Bot
 
                 }
                 OnHandleUpdateCompleted?.Invoke(messageText);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Ошибка при обработке сообщения: {ex.Message}");
-                await HandleErrorAsync(botClient, ex, ct);
-            }
         }
         public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken ct)
         {
@@ -101,23 +96,12 @@ namespace Console_Bot
 
         private async Task Start(ITelegramBotClient botClient, Update update, CancellationToken ct)
         {
-            try
-            {
                 string userName = update.Message.From.Username ?? "User";
                 long userID = update.Message.From.Id;
 
                 User newUser = await _userService.RegisterUser(userID, userName, ct);
 
-                Program.active = true;
-                Program.isRegisteredUser = newUser.TelegramUserId;
-
                 await botClient.SendMessage(update.Message.Chat, $"Пользователь зарегистрирован, '{userName}'", ct);
-            }
-            catch (Exception ex) 
-            {
-             await HandleErrorAsync(botClient, ex, ct);
-            }
-
         }
 
         static async Task Help(ITelegramBotClient botClient, Update update, CancellationToken ct)
@@ -139,7 +123,6 @@ namespace Console_Bot
 
         async Task AddTask(ITelegramBotClient botClient, Update update, string newTask, CancellationToken ct)
         {
-            try { 
             string userName = update.Message.From.Username ?? "User";
             long userID = update.Message.From.Id;
             var user = await _userService.GetUserByTelegramUserID(userID, ct);
@@ -149,31 +132,23 @@ namespace Console_Bot
 
                 ToDoItem task = await _toDoService.Add(user, taskText, ct);
                 await botClient.SendMessage(update.Message.Chat, $"Пользователь '{userName}' задача '{task.Id}' добавлена '{task.Name}'", ct);
-            }
-            catch (Exception ex)
-            {
-                await HandleErrorAsync(botClient, ex, ct);
-            }
-            
         }
 
-        static async Task Showtasks(ITelegramBotClient botClient, Update update, List<ToDoItem> tasks, CancellationToken ct)
+        async Task Showtasks(ITelegramBotClient botClient, Update update, CancellationToken ct)
         {
-            var activeTasks = new List<ToDoItem>();
-            foreach (var task in tasks)
-            {
-                if (task.State == ToDoItem.ToDoItemState.Active)
-                {
-                    activeTasks.Add(task);
-                }
-            }
+          
+            long telegramUserID = update.Message.From.Id;
+            var user = await _userService.GetUserByTelegramUserID(telegramUserID, ct);
 
-            if (activeTasks.Count == 0)
+            var activeTask = await _toDoService.GetActiveByUserId(user.UserId, ct);
+           
+
+            if (activeTask.Count == 0)
             {
                 await botClient.SendMessage(update.Message.Chat, $"Нет активных задач!", ct);
             }
             else {
-                foreach (var task in tasks)
+                foreach (var task in activeTask)
                 {
                     await botClient.SendMessage(update.Message.Chat, $"- '{task.Name}' - {task.CreatedAt} - {task.Id}", ct);
                 }
@@ -181,9 +156,11 @@ namespace Console_Bot
         }
         async Task RemoveTasks(ITelegramBotClient botClient, Update update, string input, CancellationToken ct)
         {
-            try
-            {
-                if (Program.Tasks.Count != 0)
+
+                long telegramUserID = update.Message.From.Id;
+                var user = await _userService.GetUserByTelegramUserID(telegramUserID, ct);
+                var allTasks = await _toDoService.GetAllByUserId(user.UserId, ct);
+                if (allTasks.Count != 0)
                 {
                     string taskGuid = input.Substring(12);
                     if (Guid.TryParse(taskGuid, out var id))
@@ -200,11 +177,6 @@ namespace Console_Bot
                 {
                     throw new ArgumentException("Список задач пуст!");
                 }
-            }
-            catch (Exception ex)
-            {
-                await HandleErrorAsync(botClient, ex, ct);
-            }
         }
         static public void ValidateString(string? str)
         {
@@ -224,18 +196,19 @@ namespace Console_Bot
             }
         }
 
-        static async Task ShowAllTasks(ITelegramBotClient botClient, Update update, List<ToDoItem> tasks, CancellationToken ct)
+        async Task ShowAllTasks(ITelegramBotClient botClient, Update update,  CancellationToken ct)
         {
-            foreach (var task in tasks)
+            long telegramUserID = update.Message.From.Id;
+            var user = await _userService.GetUserByTelegramUserID(telegramUserID, ct);
+            var allTasks = await _toDoService.GetAllByUserId(user.UserId, ct);
+            foreach (var task in allTasks)
             {
                 await botClient.SendMessage(update.Message.Chat, $" ({task.State}) {task.Name} - {task.CreatedAt} - {task.Id}", ct);
             }
         }
 
-        async Task Report(ITelegramBotClient botClient, Update update, List<ToDoItem> tasks, CancellationToken ct)
+        async Task Report(ITelegramBotClient botClient, Update update,  CancellationToken ct)
         {
-            try
-            {
                 long telegramUserID = update.Message.From.Id;
                 User user = await _userService.GetUserByTelegramUserID(telegramUserID, ct);
 
@@ -246,17 +219,10 @@ namespace Console_Bot
                     await botClient.SendMessage(update.Message.Chat, $"Статистика по задачам на  {report.generatedAt:dd.MM.yyyy HH:mm:ss}. Всего {report.total}; " +
                         $"Завершённых: {report.completed}; Активных: {report.active}.", ct);
                 }
-            }
-            catch (Exception ex) 
-            {
-                await HandleErrorAsync(botClient, ex, ct);
-            }
         }
 
         async Task Find(ITelegramBotClient botClient, Update update, string input, CancellationToken ct)
         {
-            try
-            {
                 long telegramUserID = update.Message.From.Id;
                 User user = await _userService.GetUserByTelegramUserID(telegramUserID, ct);
 
@@ -274,13 +240,7 @@ namespace Console_Bot
                         await botClient.SendMessage(update.Message.Chat, $"- '{task.Name}' - {task.CreatedAt} - {task.Id}", ct);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                await HandleErrorAsync(botClient, ex, ct);
-            }
         }
-
 
         //классы 
         class DuplicateTaskException : Exception

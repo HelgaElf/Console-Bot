@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram.Bot.Types;
 
 namespace Console_Bot
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        public static List <User> UserList = new List<User>();
+        private readonly List <User> UserList = new List<User>();
 
-        public async Task<User> GetUser(Guid userId, CancellationToken ct)
+        public async Task<User?> GetUser(Guid userId, CancellationToken ct)
         {
             foreach (var user in UserList)
             {
@@ -20,9 +21,9 @@ namespace Console_Bot
                     return await Task.FromResult(user);
                 }
             }
-            return await Task.FromResult<User>(null);
+            return null;
         }
-        public async Task<User> GetUserByTelegramUserId(long telegramUserId, CancellationToken ct)
+        public async Task<User?> GetUserByTelegramUserId(long telegramUserId, CancellationToken ct)
         {
             foreach (var user in UserList)
             {
@@ -31,15 +32,15 @@ namespace Console_Bot
                     return await Task.FromResult(user);
                 }
             }
-            return await Task.FromResult<User>(null);
+            return null;
         }
-        public async Task Add(User user, CancellationToken ct)
+        public void Add(User user)
         {
             if(user == null)
                 throw new ArgumentNullException("user");
             if (UserList.Contains(user))
                 throw new Exception("User already exists");
-            UserList.Add(user);   
+            UserList.Add(user);
         }
         
     }

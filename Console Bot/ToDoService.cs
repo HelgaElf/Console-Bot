@@ -16,10 +16,10 @@ namespace Console_Bot
             _inMemoryToDo = toDoRepository;
         }
 
-        public async Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct)
+        public Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct)
         {
-            var activeTasks = await _inMemoryToDo.GetActiveByUserId(userId, ct);
-            return await Task.FromResult(activeTasks);
+            var activeTasks = _inMemoryToDo.GetActiveByUserId(userId, ct);
+            return activeTasks;
         }  
         public async Task <ToDoItem> Add(User user, string name, CancellationToken ct)
         {
@@ -49,7 +49,7 @@ namespace Console_Bot
             {
                 task.State = ToDoItem.ToDoItemState.Completed;
                 task.StateChangedAt = DateTime.Now;
-                await _inMemoryToDo.Update(task, ct);
+                _inMemoryToDo.Update(task);
             }
             else throw new ArgumentException("Не существует задачи с ID - " + id);
           

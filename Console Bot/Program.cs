@@ -14,7 +14,7 @@ namespace Console_Bot
     {
         public static bool EchoCommand = false;
         public static string userName = string.Empty;
-        public static List<ToDoItem> Tasks = new List<ToDoItem>();
+       
         public static int taskCountLimit;
         public static int taskLengthLimit;
         public static int min = 0;
@@ -59,7 +59,7 @@ namespace Console_Bot
 
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                handler.HandleErrorAsync(botClient, ex,token);
             }
             finally
             {

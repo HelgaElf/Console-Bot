@@ -10,11 +10,12 @@ namespace Console_Bot
 {
     public class InMemoryToDoRepository : IToDoRepository
     {
+        private readonly List<ToDoItem> Tasks = new List<ToDoItem>();
         //описываем методы класса
         public async Task <IReadOnlyList<ToDoItem>> GetAllByUserId(Guid userId, CancellationToken ct)
         {
             var allTasks = new List<ToDoItem>();
-            foreach (var task in Program.Tasks)
+            foreach (var task in Tasks)
             {
                 if (task.User.UserId == userId)
                 {
@@ -28,39 +29,34 @@ namespace Console_Bot
 
             return await Task.FromResult(allTasks);
         }
-        public async Task <IReadOnlyList<ToDoItem>> Find(Guid userId, Func<ToDoItem, bool> predicate, CancellationToken ct)
+        public Task<IReadOnlyList<ToDoItem>> Find(Guid userId, Func<ToDoItem, bool> predicate, CancellationToken ct)
             {
-            var result = Program.Tasks
+            var result = Tasks
                .Where(item => item.User.UserId == userId)  
                .Where(predicate)                     
                .ToList()                             
                .AsReadOnly();  
-            return result;
-            }
+            return Task.FromResult<IReadOnlyList<ToDoItem>>(result);
+        }
             
         
         //Возвращает ToDoItem для UserId со статусом Active
        public async Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct)
         {
             var activeTasks = new List<ToDoItem>();
-            foreach (var task in Program.Tasks)
+            foreach (var task in Tasks)
             {
                 if (task.State == ToDoItem.ToDoItemState.Active && task.User.UserId == userId)
                 {
                     activeTasks.Add(task);
                 }
             }
-            if (activeTasks.Count == 0)
-            {
-                throw new Exception("Нет активных задач");
-            }
-
             return await Task.FromResult(activeTasks);
         }
        public async Task <ToDoItem?> Get(Guid id, CancellationToken ct)
         {
-            ToDoItem getTask =  null;
-            foreach (var task in Program.Tasks)
+            ToDoItem ? getTask = null;
+            foreach (var task in Tasks)
             {
                 if (task.Id == id)
                 {
@@ -71,23 +67,22 @@ namespace Console_Bot
         }
         public async Task Add(ToDoItem item, CancellationToken ct)
         {
-            await Task.Run(() => Program.Tasks.Add(item), ct);
+            await Task.Run(() => Tasks.Add(item), ct);
         }
-       public async Task Update(ToDoItem item, CancellationToken ct)
+       public void Update(ToDoItem item)
         {
-            var index = Program.Tasks.FindIndex(x => x.Id == item.Id);
+            var index = Tasks.FindIndex(x => x.Id == item.Id);
             if (index == -1)
                 throw new ArgumentException("Задача не найдена");
-
-            Program.Tasks[index] = item;
+            Tasks[index] = item;
         }
-        public async Task Delete(Guid id, CancellationToken ct)
+        public Task Delete(Guid id, CancellationToken ct)
         {
-            foreach (var task in Program.Tasks)
+            foreach (var task in Tasks)
             {
                 if (task.Id == id)
                 {
-                    Program.Tasks.Remove(task);
+                    Tasks.Remove(task);
                     break;
                 }
             }
@@ -96,7 +91,7 @@ namespace Console_Bot
         //Проверяет есть ли задача с таким именем у пользователя
         public async Task <bool> ExistsByName(Guid userId, string name, CancellationToken ct)
         {
-            foreach (var task in Program.Tasks)
+            foreach (var task in Tasks)
             {
                 if (task.User.UserId == userId && task.Name == name)
                 {
@@ -110,7 +105,7 @@ namespace Console_Bot
         public async Task <int> CountActive(Guid userId, CancellationToken ct)
         {
             int count = 0;
-            foreach (var task in Program.Tasks)
+            foreach (var task in Tasks)
             {
                 if (task.State == ToDoItem.ToDoItemState.Active && task.User.UserId == userId)
                 {

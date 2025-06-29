@@ -13,7 +13,7 @@ namespace Console_Bot
 		Task <IReadOnlyList<ToDoItem>> GetActiveByUserId(Guid userId, CancellationToken ct);
 		Task<ToDoItem?> Get(Guid id, CancellationToken ct);
 		Task Add(ToDoItem item, CancellationToken ct);
-		Task Update(ToDoItem item, CancellationToken ct);
+		void Update(ToDoItem item);
 		Task Delete(Guid id, CancellationToken ct);
 		//Проверяет есть ли задача с таким именем у пользователя
 		Task <bool> ExistsByName(Guid userId, string name, CancellationToken ct);

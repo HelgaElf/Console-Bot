@@ -23,11 +23,11 @@ namespace Console_Bot
             {
                 TelegramUserId = telegramUserId,
                 TelegramUserName = telegramUserName,
-                UserId = Guid.NewGuid()
+                UserId = Guid.NewGuid(),
+                RegisteredAt = DateTime.Now,
             };
 
-
-            await _userRepository.Add(newUser, ct);
+           _userRepository.Add(newUser);
             return await Task.FromResult(newUser);
 
         }
