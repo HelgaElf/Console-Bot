@@ -8,6 +8,6 @@ namespace Console_Bot
 {
     public interface IToDoReportService
     {
-        public (int total, int completed, int active, DateTime generatedAt) GetUserStats(Guid userId);
+        public Task<(int total, int completed, int active, DateTime generatedAt)> GetUserStats(Guid userId, CancellationToken ct);
     }
 }

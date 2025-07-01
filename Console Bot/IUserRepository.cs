@@ -8,8 +8,8 @@ namespace Console_Bot
 {
    public interface IUserRepository
     {
-   public User? GetUser(Guid userId);
-   public User? GetUserByTelegramUserId(long telegramUserId);
+   public Task<User?> GetUser(Guid userId, CancellationToken ct);
+   public Task<User?> GetUserByTelegramUserId(long telegramUserId, CancellationToken ct);
    public void Add(User user);
 
     }

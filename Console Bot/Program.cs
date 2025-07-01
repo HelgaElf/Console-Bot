@@ -14,7 +14,7 @@ namespace Console_Bot
     {
         public static bool EchoCommand = false;
         public static string userName = string.Empty;
-        public static List<ToDoItem> Tasks = new List<ToDoItem>();
+       
         public static int taskCountLimit;
         public static int taskLengthLimit;
         public static int min = 0;
@@ -24,41 +24,49 @@ namespace Console_Bot
 
         static void Main(string[] args)
         {
-            IUserService userService = new UserService();
-            var handler = new UpdateHandler(userService);
-            var botClient = new ConsoleBotClient();
-            
-            botClient.StartReceiving(handler);
+            IUserRepository userRepository = new InMemoryUserRepository();
+            IUserService userService = new UserService(userRepository);
+            IToDoRepository toDoRepository = new InMemoryToDoRepository();
+            IToDoService toDoService = new ToDoService(toDoRepository);
+            IToDoReportService toDoReportService = new ToDoReportService();
 
-            //var botClient = new ConsoleBotClient();
-            // botClient.StartReceiving(handler);
-
-            //var handler = new UpdateHandler(botClient, update);
-
-            while(true)
+            MessageEventHandler startedHandler = message =>
             {
-                string input = Console.ReadLine();
-                var update = new Update { Message = new Message { Text = input, Chat = new Chat { Id = 0 } } };
-                handler.HandleUpdateAsync(botClient, update);
+                try
+                {
+                    Console.WriteLine($"Началась обработка сообщения: '{message}'");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка в OnHandleUpdateStarted: {ex.Message}");
+                }
+            };
+
+            MessageEventHandler completedHandler = message =>
+                Console.WriteLine($"Завершена обработка сообщения: '{message}'");
+
+            var handler = new UpdateHandler(userService, toDoService, toDoReportService);
+            handler.OnHandleUpdateStarted += startedHandler;
+            handler.OnHandleUpdateCompleted += completedHandler;
+
+            var botClient = new ConsoleBotClient();
+            var ct = new CancellationTokenSource();
+            CancellationToken token = ct.Token;
+            try
+            {
+                botClient.StartReceiving(handler, token);
             }
 
-            handler.HandleUpdateAsync(botClient, new Update
+            catch (Exception ex)
             {
-                Message = new Message
-                {
-                    Text = active ? "/start" : "/help",
-                    Chat = new Chat { Id = 123 }
-                }
-            });
-            Console.WriteLine("Добро пожаловать! Выберите команду:  /help (если требуется помощь), /info (о боте)");
-            
-               catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    var userService = new UserService(); // Создаём сервис
-                    var updateHandler = new UpdateHandler(userService);
-                }
+                handler.HandleErrorAsync(botClient, ex,token);
+            }
+            finally
+            {
+                handler.OnHandleUpdateStarted -= startedHandler;
+                handler.OnHandleUpdateCompleted -= completedHandler;
             }
         }
     }
+    
 }
