@@ -6,8 +6,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Otus.ToDoList.ConsoleBot;
-using Otus.ToDoList.ConsoleBot.Types;
+using Telegram.Bot;
+using Telegram.Bot.Polling;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+
 namespace Console_Bot
 {
     internal class Program
@@ -22,7 +25,9 @@ namespace Console_Bot
         public static long isRegisteredUser;
         public static bool active = false;
 
-        static void Main(string[] args)
+
+
+        static async Task Main(string[] args)
         {
             IUserRepository userRepository = new InMemoryUserRepository();
             IUserService userService = new UserService(userRepository);
@@ -30,6 +35,21 @@ namespace Console_Bot
             IToDoService toDoService = new ToDoService(toDoRepository);
             IToDoReportService toDoReportService = new ToDoReportService();
 
+            var commands = new List<BotCommand>
+            {
+                 new() { Command = "/start", Description = "Запустить бота" },
+                 new() { Command = "/addtask", Description = "Добавить новую задачу" },
+                 new() { Command = "/showalltasks", Description = "Показать все задачи" },
+                 new() { Command = "/showtasks", Description = "Показать завершённые задачи" },
+                 new() { Command = "/addtask", Description = "Добавить новую задачу" },
+                 new() { Command = "/removetask", Description = "Удалить задачу" },
+                 new() { Command = "/completetask", Description = "Отметить задачу как выполненную" },
+                 new() { Command = "/find", Description = "Найти задачу" },
+                 new() { Command = "/info", Description = "Информация о боте" },
+                 new() { Command = "/help", Description = "Помощь" },
+                 new() { Command = "/report", Description = "Показать статистику" }
+            };
+            
             MessageEventHandler startedHandler = message =>
             {
                 try
@@ -49,23 +69,67 @@ namespace Console_Bot
             handler.OnHandleUpdateStarted += startedHandler;
             handler.OnHandleUpdateCompleted += completedHandler;
 
-            var botClient = new ConsoleBotClient();
+            string ?token = Environment.GetEnvironmentVariable("TelegramBotToken", EnvironmentVariableTarget.User);
+            if (string.IsNullOrEmpty(token))
+            {
+                Console.WriteLine("Bot Token is not found. Please, set TelegramBotToken environment variable.");
+                return;
+            }
+            var botClient = new TelegramBotClient(token);
+            var receiverOptions = new ReceiverOptions
+            {
+                AllowedUpdates = [UpdateType.Message],
+                DropPendingUpdates = true
+            };
+
+            
+            var me = await botClient.GetMe();
+            Console.WriteLine($"{me.FirstName} запущен!");
+            
+
             var ct = new CancellationTokenSource();
-            CancellationToken token = ct.Token;
+            CancellationToken cancellationToken = ct.Token;
+
+            await botClient.SetMyCommands(
+                commands: commands,
+                cancellationToken: cancellationToken
+                );
             try
             {
-                botClient.StartReceiving(handler, token);
+                botClient.StartReceiving(handler, receiverOptions,cancellationToken);
+                Console.WriteLine("Нажмите клавишу 'A' для выхода");
+                while (!ct.IsCancellationRequested)
+                {
+                    var key = Console.ReadKey(intercept: true);
+                    if (key.Key == ConsoleKey.A)
+                    {
+                        Console.WriteLine("\nЗавершение работы...");
+                        ct.Cancel();
+                        break;
+                    }
+                    else
+                    {
+                        var bot = await botClient.GetMe();
+                        Console.WriteLine($"\nИнформация о боте:\n" +
+                                        $"ID: {bot.Id}\n" +
+                                        $"Username: @{bot.Username}\n" +
+                                        $"Имя: {bot.FirstName}");
+                    }
+                }
+                await Task.Delay(-1);
             }
 
             catch (Exception ex)
             {
-                handler.HandleErrorAsync(botClient, ex,token);
+                _ = handler.HandleErrorAsync(botClient, ex, Telegram.Bot.Polling.HandleErrorSource.HandleUpdateError, cancellationToken);
+                
             }
             finally
             {
                 handler.OnHandleUpdateStarted -= startedHandler;
                 handler.OnHandleUpdateCompleted -= completedHandler;
             }
+           
         }
     }
     
